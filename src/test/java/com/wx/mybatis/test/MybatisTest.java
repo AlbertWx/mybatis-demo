@@ -2,6 +2,7 @@ package com.wx.mybatis.test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -102,6 +103,19 @@ public class MybatisTest {
 		System.out.println(user.toString());
 
 	}
+	
+	@Test
+	public void selectByList() {
+		List<String> list = new ArrayList<>();
+		list.add("36");
+		list.add("41");
+		List<Map<Object,Object>> lists = session.selectList("User.selectByList", list);
+		for (Map<Object, Object> map : lists) {
+			System.out.println(map.get("username")+"----"+map.get("sex")
+			+"----"+map.get("address")+"----"+map.get("birthday"));
+		}
+	}
+	
 	/**
 	 * 模糊查询
 	 */

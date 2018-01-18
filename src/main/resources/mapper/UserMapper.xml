@@ -39,6 +39,12 @@
 	<select id="selectAsMapByObject" parameterType="com.wx.mybatis.entity.User" resultType="java.util.HashMap">
 		select * from user where username= #{username}  and  address =#{address} 
 	</select>
+	<select id="selectByList" parameterType="java.util.ArrayList" resultType="java.util.HashMap">
+		select * from user where id in
+		<foreach collection="list" index="index" item="item" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</select>
 	<select id="selectAsMapByMap" parameterType="java.util.HashMap" resultType="java.util.HashMap">
 		select * from user where username= #{username}  and  address =#{address} 
 	</select>
