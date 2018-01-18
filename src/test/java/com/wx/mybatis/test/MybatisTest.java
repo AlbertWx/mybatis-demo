@@ -101,7 +101,6 @@ public class MybatisTest {
 		map.put("address", "hongkong");
 		User user = session.selectOne("User.selectByMap", map);
 		System.out.println(user.toString());
-
 	}
 	
 	@Test
