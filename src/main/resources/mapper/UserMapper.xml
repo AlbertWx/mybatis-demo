@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="User">
+
+	<!-- #{} 标识占位符 可以防止sql注入 ${} 用作字符串拼接 此时只能用vaule标识 ${value}固定写法 可能导致sql注入 -->
+
+	<select id="selectById" parameterType="int"
+		resultType="com.wx.mybatis.entity.User">
+		select * from user where id=#{id}
+	</select>
+	<select id="selectAll" resultType="com.wx.mybatis.entity.User">
+		select * from user
+	</select>
+	<select id="selectListMap" resultType="java.util.HashMap">
+		select username , address
+		from user where id in (10,16)
+	</select>
+	<select id="selectMap" resultType="java.util.HashMap">
+		select username , address from
+		user where id in (10)
+	</select>
+	<select id="selectLike" parameterType="String"
+		resultType="com.wx.mybatis.entity.User">
+		<!-- select * from user where username like '%${value}%' -->
+		select * from user where username like "%"#{v}"%"
+		<!-- 可在需要被模糊匹配的字符串两边加上 "%" 即可实现转义 -->
+	</select>
+	
+	<select id="selectLikeByMap" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		select * from user where username like "%"#{username}"%"
+	</select>
+	
+	<select id="selectByMap" parameterType="java.util.HashMap" resultType="com.wx.mybatis.entity.User">
+		select * from user where username=#{username}  and address=#{address}
+	</select>
+	<select id="selectAsMapByObject" parameterType="com.wx.mybatis.entity.User" resultType="java.util.HashMap">
+		select * from user where username= #{username}  and  address =#{address} 
+	</select>
+	<select id="selectAsMapByMap" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		select * from user where username= #{username}  and  address =#{address} 
+	</select>
+	<select id="selectByArrayAsObject" parameterType="java.util.ArrayList" resultType="com.wx.mybatis.entity.User">
+		select * from user where id in
+		<foreach collection="array" item="item" index="index" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</select>
+	<select id="selectByArrayAsMap" parameterType="java.util.ArrayList" resultType="java.util.HashMap">
+		select * from user where id in
+		<foreach collection="array" item="item" index="index" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</select>
+	
+	<insert id="insertByHashMap" parameterType="java.util.HashMap">
+		insert into user (username ,address ,birthday ,sex ) values (#{username} ,#{address} ,#{birthday} ,#{sex})
+	</insert>
+	<insert id="insertUser" parameterType="com.wx.mybatis.entity.User">
+		insert into user (username ,address ) values (#{username} ,#{address} )
+	</insert>
+	<insert id="insertByMap" parameterType="java.util.Map">
+		insert into user
+		<foreach collection="params.keys" item="key" open="(" close=")" separator=",">
+			${key}
+		</foreach>
+		values
+		<foreach collection="params.keys" item="key" open="(" close=")" separator=",">
+			#{params[${key}]}
+		</foreach>
+	</insert>
+
+</mapper>
