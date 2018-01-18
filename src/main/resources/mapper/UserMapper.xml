@@ -107,4 +107,84 @@
 		</foreach>
 	</insert>
 
+	<update id="updateByMap" parameterType="java.util.HashMap">
+		update user set
+		address=#{address} where username=#{username}
+	</update>
+	<update id="updateByMapAndList" parameterType="java.util.HashMap">
+		update user set address=#{address} where 1=1
+		<if test="username != null">
+			and username=#{username}
+		</if>
+		<if test="ids != null">
+			and id in
+			<foreach collection="ids" item="item" index="index" open="("
+				close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+	</update>
+
+	<delete id="deleteById" parameterType="java.lang.Integer">
+		delete from user where id
+		= #{id}
+	</delete>
+	<delete id="deleteByMap" parameterType="java.util.HashMap">
+		delete from user where 1=1 and sex = #{sex} and username = #{username}
+		and address=#{address}
+		<if test="ids != null">
+			and id in
+			<foreach collection="ids" item="item" index="index" open="("
+				close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+	</delete>
+
+	<select id="selectByMapInMap" parameterType="java.util.HashMap"
+		resultType="java.util.HashMap">
+		select * from user where 1=1 and
+		<if test="ids != null">
+			id in
+			<foreach collection="ids" item="item" index="index" open="("
+				close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<!-- 两种去map中值的方式， 1 .<if test="names != null"> and username in <foreach 
+			collection="names.keys" item="key" open="(" close=")" separator=","> #{names[${key}]} 
+			</foreach> 该方式为先获取map中的全部key，然后通过类似map.get(key) 的方式获取value值 ， 重点是 collection="names.keys" 
+			item="key" ， 取值方式#{names[${key}]} </if> 2.<if test="names != null"> and username 
+			in <foreach collection="names.values" item="value" open="(" close=")" separator=","> 
+			#{value} </foreach> </if> 该种方式通过先获取map中全部的value值，然后循环获取每个value的值 ， 重点是collection="names.values" 
+			item="value" 取值方式#{value} -->
+		<!-- 方式一 ：先获取全部的key，然后通过key得value -->
+		<if test="names != null">
+			and username in
+			<foreach collection="names.keys" item="key" open="(" close=")"
+				separator=",">
+				#{names[${key}]}
+			</foreach>
+		</if>
+		<!-- 方式二 ：先获取全部的value值，然后循环获取每个value值 -->
+		<if test="names != null">
+			and username in
+			<foreach collection="names.values" item="value" open="("
+				close=")" separator=",">
+				#{value}
+			</foreach>
+		</if>
+		<!-- 方式三：循环，通过key获取对应的value值 -->
+		and username in
+		<foreach collection="names.keys" item="key" open="(" close=")"
+			separator=",">
+			<if test="names[key] != null">
+				#{names[${key}]}
+			</if>
+		</foreach>
+		<if test="address != null">
+			and address = #{address}
+		</if>
+	</select>
+
 </mapper>

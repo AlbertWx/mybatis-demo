@@ -239,4 +239,68 @@ public class MybatisTest {
 		session.commit();
 	}
 	
+	@Test
+	public void updateByMap() {
+		Map<Object,Object> map = new HashMap<>();
+		map.put("username", "Andy");
+		map.put("sex", "boy");
+		map.put("address", "hongkong");
+		session.update("User.updateByMap", map);
+		session.commit();
+	}
+	
+	@Test
+	public void updateByMapAndList() {
+		List<String> list = new ArrayList<>();
+		list.add("46");
+		list.add("38");
+		Map<Object,Object> map = new HashMap<>();
+		map.put("username", "Andy");
+		map.put("sex", "boy");
+		map.put("ids", list);
+		map.put("address", "nanjing");
+		session.update("User.updateByMapAndList", map);
+		session.commit();
+	}
+	
+	@Test
+	public void deleteById() {
+		session.delete("User.deleteById", 1);
+		session.commit();
+	}
+	
+	@Test
+	public void deleteByMap() {
+		List<String> list = new ArrayList<>();
+		list.add("46");
+		list.add("26");
+		list.add("38");
+		Map<Object,Object> map = new HashMap<>();
+		map.put("username", "Andy");
+		map.put("sex", "boy");
+		map.put("ids", list);
+		map.put("address", "nanjing");
+		session.delete("User.deleteByMap",map);
+	}
+	
+	@Test
+	public void selectByMapInMap() {
+		List<String> list = new ArrayList<>();
+		list.add("36");
+		list.add("41");
+		list.add("16");
+		Map<Object,Object> names = new HashMap<Object,Object>();
+		names.put("name1", "张小明");
+		names.put("name2", "Ludwig");
+		Map<Object,Object> mapc = new HashMap<Object,Object>();
+		mapc.put("ids", list);
+		mapc.put("address", "hongkong");
+		mapc.put("names", names);
+		List<Map<Object,Object>> lists = session.selectList("User.selectByMapInMap", mapc);
+		for (Map<Object, Object> map : lists) {
+			System.out.println(map.get("username")+"----"+map.get("sex")
+			+"----"+map.get("address")+"----"+map.get("birthday"));
+		}
+	}
+	
 }
