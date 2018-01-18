@@ -3,7 +3,9 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="User">
+<!-- <mapper namespace="User">  此namespace定义方式为普通方式，非适应mybatis动态代理方式-->
+<mapper namespace="com.wx.mybatis.mapper.UserMapper">
+		<!-- namespace="com.wx.mybatis.mapper.UserMapper"该命名空间是绑定mybatis的接口动态代理方式，指定对应的接口 -->
 
 	<!-- #{} 标识占位符 可以防止sql注入 ${} 用作字符串拼接 此时只能用vaule标识 ${value}固定写法 可能导致sql注入 -->
 
