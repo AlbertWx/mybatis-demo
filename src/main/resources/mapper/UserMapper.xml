@@ -28,52 +28,81 @@
 		select * from user where username like "%"#{v}"%"
 		<!-- 可在需要被模糊匹配的字符串两边加上 "%" 即可实现转义 -->
 	</select>
-	
-	<select id="selectLikeByMap" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+
+	<select id="selectLikeByMap" parameterType="java.util.HashMap"
+		resultType="java.util.HashMap">
 		select * from user where username like "%"#{username}"%"
 	</select>
-	
-	<select id="selectByMap" parameterType="java.util.HashMap" resultType="com.wx.mybatis.entity.User">
-		select * from user where username=#{username}  and address=#{address}
+
+	<select id="selectByMap" parameterType="java.util.HashMap"
+		resultType="com.wx.mybatis.entity.User">
+		select * from user where username=#{username} and
+		address=#{address}
 	</select>
-	<select id="selectAsMapByObject" parameterType="com.wx.mybatis.entity.User" resultType="java.util.HashMap">
-		select * from user where username= #{username}  and  address =#{address} 
+	<select id="selectAsMapByObject" parameterType="com.wx.mybatis.entity.User"
+		resultType="java.util.HashMap">
+		select * from user where username= #{username} and address
+		=#{address}
 	</select>
-	<select id="selectByList" parameterType="java.util.ArrayList" resultType="java.util.HashMap">
+	<select id="selectByList" parameterType="java.util.ArrayList"
+		resultType="java.util.HashMap">
 		select * from user where id in
-		<foreach collection="list" index="index" item="item" open="(" close=")" separator=",">
+		<foreach collection="list" index="index" item="item" open="("
+			close=")" separator=",">
 			#{item}
 		</foreach>
 	</select>
-	<select id="selectAsMapByMap" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-		select * from user where username= #{username}  and  address =#{address} 
+	<select id="selectByListInMap" parameterType="java.util.HashMap"
+		resultType="java.util.HashMap">
+		select * from user where address = #{address}
+		<if test="ids != null">
+			and id in
+			<foreach collection="ids" index="index" item="item" open="("
+				close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
 	</select>
-	<select id="selectByArrayAsObject" parameterType="java.util.ArrayList" resultType="com.wx.mybatis.entity.User">
+	<select id="selectAsMapByMap" parameterType="java.util.HashMap"
+		resultType="java.util.HashMap">
+		select * from user where username= #{username} and address
+		=#{address}
+	</select>
+	<select id="selectByArrayAsObject" parameterType="java.util.ArrayList"
+		resultType="com.wx.mybatis.entity.User">
 		select * from user where id in
-		<foreach collection="array" item="item" index="index" open="(" close=")" separator=",">
+		<foreach collection="array" item="item" index="index" open="("
+			close=")" separator=",">
 			#{item}
 		</foreach>
 	</select>
-	<select id="selectByArrayAsMap" parameterType="java.util.ArrayList" resultType="java.util.HashMap">
+	<select id="selectByArrayAsMap" parameterType="java.util.ArrayList"
+		resultType="java.util.HashMap">
 		select * from user where id in
-		<foreach collection="array" item="item" index="index" open="(" close=")" separator=",">
+		<foreach collection="array" item="item" index="index" open="("
+			close=")" separator=",">
 			#{item}
 		</foreach>
 	</select>
-	
+
 	<insert id="insertByHashMap" parameterType="java.util.HashMap">
-		insert into user (username ,address ,birthday ,sex ) values (#{username} ,#{address} ,#{birthday} ,#{sex})
+		insert into user
+		(username ,address ,birthday ,sex ) values (#{username} ,#{address}
+		,#{birthday} ,#{sex})
 	</insert>
 	<insert id="insertUser" parameterType="com.wx.mybatis.entity.User">
-		insert into user (username ,address ) values (#{username} ,#{address} )
+		insert into user (username
+		,address ) values (#{username} ,#{address} )
 	</insert>
 	<insert id="insertByMap" parameterType="java.util.Map">
 		insert into user
-		<foreach collection="params.keys" item="key" open="(" close=")" separator=",">
+		<foreach collection="params.keys" item="key" open="(" close=")"
+			separator=",">
 			${key}
 		</foreach>
 		values
-		<foreach collection="params.keys" item="key" open="(" close=")" separator=",">
+		<foreach collection="params.keys" item="key" open="(" close=")"
+			separator=",">
 			#{params[${key}]}
 		</foreach>
 	</insert>

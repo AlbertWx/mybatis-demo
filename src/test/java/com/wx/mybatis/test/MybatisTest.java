@@ -116,6 +116,22 @@ public class MybatisTest {
 		}
 	}
 	
+	@Test
+	public void selectByListInMap() {
+		List<String> list = new ArrayList<>();
+		list.add("36");
+		list.add("41");
+		list.add("16");
+		Map<Object,Object> mapc = new HashMap<Object,Object>();
+		mapc.put("ids", list);
+		mapc.put("address", "hongkong");
+		List<Map<Object,Object>> lists = session.selectList("User.selectByListInMap", mapc);
+		for (Map<Object, Object> map : lists) {
+			System.out.println(map.get("username")+"----"+map.get("sex")
+			+"----"+map.get("address")+"----"+map.get("birthday"));
+		}
+	}
+	
 	/**
 	 * 模糊查询
 	 */
