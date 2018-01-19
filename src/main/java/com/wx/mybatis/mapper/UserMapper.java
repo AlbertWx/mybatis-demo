@@ -1,7 +1,9 @@
 package com.wx.mybatis.mapper;
 
+import java.util.List;
 import java.util.Map;
 
+import com.wx.mybatis.entity.QueryVo;
 import com.wx.mybatis.entity.User;
 
 public interface UserMapper {
@@ -26,5 +28,21 @@ public interface UserMapper {
 	public User selectById(int id);
 	
 	public Map<Object,Object> selectAsMapByObject(User user);
+	
+	public List<User> selectByQueryVo(QueryVo queryVo);
+	
+	public Integer sumCount();
+	
+	public List<User> queryByCondition(User user);
+
+	public List<User> queryByConditionWhere(User user);
+	
+	public List<User> queryByArrys(String[] ids);
+
+	public List<User> queryByList(List<String> list);
+	
+	public List<User> queryByConditionQueryVoList(QueryVo queryVo);
+	
+	public List<User> queryByConditionQueryVoArray(QueryVo queryVo);
 	
 }

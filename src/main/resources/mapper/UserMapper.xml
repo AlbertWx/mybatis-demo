@@ -188,5 +188,10 @@
 			and address = #{address}
 		</if>
 	</select>
-
+	
+	<select id="selectByQueryVo" parameterType="com.wx.mybatis.entity.QueryVo" resultType="com.wx.mybatis.entity.User">
+		select * from user where username like  "%"#{user.username}"%"
+	</select>
+	
+	
 </mapper>

@@ -2,6 +2,8 @@ package com.wx.mybatis.test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.io.Resources;
@@ -12,6 +14,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.wx.mybatis.entity.QueryVo;
 import com.wx.mybatis.entity.User;
 import com.wx.mybatis.mapper.UserMapper;
 
@@ -24,7 +27,9 @@ import com.wx.mybatis.mapper.UserMapper;
 public class MybatisMapperTest {
 
 	private SqlSession session;
-
+	
+	private UserMapper userMapper;
+	
 	/**
 	 * 运行测试方法前创建SqlSession
 	 */
@@ -40,6 +45,7 @@ public class MybatisMapperTest {
 			// 2.获取SqlSession
 			SqlSession session = sessionFactory.openSession();
 			this.session = session;
+			this.userMapper = session.getMapper(UserMapper.class); 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -72,5 +78,93 @@ public class MybatisMapperTest {
 		Map<Object, Object> map = mapper.selectAsMapByObject(user);
 		System.out.println(map.get("username")+"==========="+map.get("address"));
 	}
-
+	
+	@Test
+	public void selectByQueryVo() {
+		User user = new User();
+		user.setUsername("L");
+		QueryVo queryVo = new QueryVo();
+		queryVo.setUser(user);
+		UserMapper mapper = session.getMapper(UserMapper.class);
+		List<User> list = mapper.selectByQueryVo(queryVo);
+		for (User user2 : list) {
+			System.out.println(user2.toString());
+		}
+	}
+	
+	@Test
+	public void sumCount() {
+		Integer i = userMapper.sumCount();
+		System.out.println("---------i = "+i);
+	}
+	
+	@Test
+	public void queryByCondition() {
+		User user = new User();
+		user.setSex("1");
+		user.setUsername("a");
+		List<User> list = userMapper.queryByCondition(user);
+		for (User user2 : list) {
+			System.out.println(user2.toString());
+		}
+	}
+	
+	@Test
+	public void queryByConditionWhere() {
+		User user = new User();
+		user.setSex("1");
+		user.setUsername("a");
+		List<User> list = userMapper.queryByConditionWhere(user);
+		for (User user2 : list) {
+			System.out.println(user2.toString());
+		}
+	}
+	
+	@Test
+	public void queryByConditionQueryVoList() {
+		List<String> list = new ArrayList<>();
+		list.add("16");
+		list.add("36");
+		list.add("42");
+		QueryVo queryVo = new QueryVo();
+		queryVo.setIdList(list);
+		List<User> users = userMapper.queryByConditionQueryVoList(queryVo);
+		for (User user : users) {
+			System.out.println(user);
+		}
+	}
+	
+	@Test
+	public void queryByConditionQueryVoArray() {
+		String[] ids = {"16","36","42"};
+		QueryVo queryVo = new QueryVo();
+		queryVo.setIds(ids);
+		List<User> users = userMapper.queryByConditionQueryVoArray(queryVo);
+		for (User user : users) {
+			System.out.println(user);
+		}
+	}
+	
+	@Test
+	public void queryByArrys() {
+		String[] ids = {"16","36","42"};
+		List<User> users = userMapper.queryByArrys(ids);
+		for (User user : users) {
+			System.out.println(user);
+		}
+	}
+	
+	@Test
+	public void queryByList() {
+		List<String> list = new ArrayList<>();
+		list.add("16");
+		list.add("36");
+		list.add("42");
+		List<User> users = userMapper.queryByList(list);
+		for (User user : users) {
+			System.out.println(user);
+		}
+	}
+	
+	
 }

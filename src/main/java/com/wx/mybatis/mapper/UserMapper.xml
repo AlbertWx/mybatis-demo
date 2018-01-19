@@ -3,15 +3,19 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<!-- <mapper namespace="User">  此namespace定义方式为普通方式，非适应mybatis动态代理方式-->
+<!-- <mapper namespace="User"> 此namespace定义方式为普通方式，非适应mybatis动态代理方式 -->
 <mapper namespace="com.wx.mybatis.mapper.UserMapper">
-		<!-- namespace="com.wx.mybatis.mapper.UserMapper"该命名空间是绑定mybatis的接口动态代理方式，指定对应的接口 -->
+	<!-- namespace="com.wx.mybatis.mapper.UserMapper"该命名空间是绑定mybatis的接口动态代理方式，指定对应的接口 -->
 
 	<!-- #{} 标识占位符 可以防止sql注入 ${} 用作字符串拼接 此时只能用vaule标识 ${value}固定写法 可能导致sql注入 -->
 
-	<select id="selectById" parameterType="int"
-		resultType="User">
-		select * from user where id=#{id}
+	<sql id="selectAll">
+		select * from user
+	</sql>
+
+	<select id="selectById" parameterType="int" resultType="User">
+		select *
+		from user where id=#{id}
 	</select>
 	<select id="selectAll" resultType="com.wx.mybatis.entity.User">
 		select * from user
@@ -187,6 +191,87 @@
 		<if test="address != null">
 			and address = #{address}
 		</if>
+	</select>
+
+	<select id="selectByQueryVo" parameterType="com.wx.mybatis.entity.QueryVo"
+		resultType="com.wx.mybatis.entity.User">
+		select * from user where username like
+		"%"#{user.username}"%"
+	</select>
+
+	<select id="sumCount" resultType="java.lang.Integer">
+		select count(1) from user
+	</select>
+
+	<select id="queryByCondition" parameterType="User" resultType="user">
+		select * from user
+		where 1=1
+		<if test="sex != null and sex != '' ">
+			and sex = #{sex}
+		</if>
+		<if test="username != null and username != '' ">
+			and username like "%"#{username}"%"
+		</if>
+	</select>
+
+	<select id="queryByConditionWhere" parameterType="User"
+		resultType="user">
+		<!-- select * from user -->
+		
+		<include refid="selectAll" />
+		
+		<where>
+			<if test="sex != null and sex != '' ">
+				sex = #{sex}
+			</if>
+			<if test="username != null and username != '' ">
+				and username like "%"#{username}"%"
+			</if>
+		</where>
+	</select>
+
+	<select id="queryByConditionQueryVoList" parameterType="QueryVo" resultType="User">
+		<include refid="selectAll"/>
+		<where> 
+			<!--collection填写QueryVo包装类中的属性idList -->
+			<foreach collection="idList" item="id" open="id in (" close=")" separator=",">
+				#{id}
+			</foreach>
+		</where>
+	</select>
+
+	<select id="queryByConditionQueryVoArray" parameterType="QueryVo" resultType="User">
+		<include refid="selectAll"/>
+		<where> 
+			<!--collection填写QueryVo包装类中的属性idList -->
+			<foreach collection="ids" item="id" open="id in (" close=")" separator=",">
+				#{id}
+			</foreach>
+		</where>
+	</select>
+	
+	<select id="queryByArrys" parameterType="java.util.List" resultType="User">
+		<include refid="selectAll"/>
+		<where> 
+			<!--如果传入的参数为数组，则 parameterType必须写为"java.util.List"
+				foreach标签中collection属性必须写为"array"
+			-->
+			<foreach collection="array" item="id" open="id in (" close=")" separator=",">
+				#{id}
+			</foreach>
+		</where>
+	</select>
+	
+	<select id="queryByList" parameterType="java.util.List" resultType="User">
+		<include refid="selectAll"/>
+		<where> 
+			<!--如果传入的参数为数组，则 parameterType必须写为"java.util.List"
+				foreach标签中collection属性必须写为"list"
+			-->
+			<foreach collection="list" item="id" open="id in (" close=")" separator=",">
+				#{id}
+			</foreach>
+		</where>
 	</select>
 
 </mapper>
