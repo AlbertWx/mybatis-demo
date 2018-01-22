@@ -5,16 +5,75 @@
 <mapper namespace="com.wx.mybatis.mapper.OrdersMapper">
 
 	<resultMap type="com.wx.mybatis.entity.Orders" id="OrderMap">
-		<!-- 类属性和数据库字段名匹配的可以省略不写 -->
-		<id property="id" column="id"/>
-		<result property="userId" column="user_id"/>
-		<result property="number" column="number"/>
-		<result property="createtime" column="createtime"/>
-		<result property="note" column="note"/>
+		<!--单表查询 类属性和数据库字段名匹配的可以省略不写 -->
+		<id property="id" column="id" />
+		<result property="userId" column="user_id" />
+		<!-- <result property="number" column="number" /> -->
+		<result property="createtime" column="createtime" />
+		<result property="note" column="note" />
 	</resultMap>
-	
+
 	<select id="queryAllOrder" resultMap="OrderMap">
 		select * from orders
 	</select>
-	
+
+	<resultMap type="com.wx.mybatis.entity.Orders" id="OrderAndUser">
+		<!-- 多表关联查询，类属性和数据库字段名的匹配必须写完整 -->
+		<!-- 加上主键ID会有去重的效果 -->
+		<id property="id" column="id" />
+		<result property="userId" column="user_id" />
+		<result property="number" column="number" />
+		<result property="createtime" column="createtime" />
+		<result property="note" column="note" />
+		<!-- 一对一 标签 association -->
+		<association property="user" javaType="com.wx.mybatis.entity.User">
+			<result column="user_id" property="id" />
+			<result column="username" property="username" />
+			<result column="birthday" property="birthday" />
+			<result column="sex" property="sex" />
+			<result column="address" property="address" />
+		</association>
+	</resultMap>
+	<select id="queryOrderAndUser" resultMap="OrderAndUser">
+		select
+		<!-- u.id, 此u.id应该注释掉或者放在o.id后面，因为此字段拍在最前面，上面的 resultMap 中的id匹配时会选这个id，因为次id为重复值，可能由于 
+			id的唯一性而出现去重少数据的现象 -->
+		o.id ,
+		u.username
+		, u.birthday, u.sex, u.address, o.number,
+		o.createtime,
+		o.note ,o.user_id from
+		orders o left join user u on u.id =
+		o.user_id
+	</select>
+
+
+	<resultMap type="com.wx.mybatis.entity.User" id="UserAndOrder">
+		<id column="id" property="id" />
+		<result column="username" property="username" />
+		<result column="birthday" property="birthday" />
+		<result column="sex" property="sex" />
+		<result column="address" property="address" />
+		<!-- 一对多 标签 collection -->
+		<collection property="listOrders" javaType="java.util.ArrayList"
+			ofType="com.wx.mybatis.entity.Orders">
+			<id property="id" column="oId" />
+			<result property="userId" column="user_id" />
+			<result property="number" column="number" />
+			<result property="createtime" column="createtime" />
+			<result property="note" column="note" />
+		</collection>
+
+	</resultMap>
+	<select id="queryUserAndOrder" resultMap="UserAndOrder">
+		select
+		u.id ,
+		o.id as oId
+		,
+		u.username
+		, u.birthday, u.sex, u.address, o.number, o.createtime,
+		o.note ,o.user_id from
+		user u left join orders o on u.id = o.user_id
+	</select>
+
 </mapper>

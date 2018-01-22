@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.wx.mybatis.entity.Orders;
+import com.wx.mybatis.entity.User;
 import com.wx.mybatis.mapper.OrdersMapper;
 import com.wx.mybatis.mapper.UserMapper;
 
@@ -60,4 +61,23 @@ public class OrdersMapperTest {
 		}
 	}
 	
+	@Test
+	public void queryOrderAndUser() {
+		List<Orders> list = ordersMapper.queryOrderAndUser();
+		for (Orders orders : list) {
+			System.out.println("------" + orders.toString() + "------" + orders.getUser().toString());
+		}
+	}
+	
+	@Test
+	public void queryUserAndOrder() {
+		List<User> list = ordersMapper.queryUserAndOrder();
+		for (User user : list) {
+			System.out.println("----"+user.toString()+user.getListOrders());
+			for (Orders order : user.getListOrders()) {
+				System.out.println(order.toString());
+			}
+			System.out.println("------------------------");
+		}
+	}
 }
